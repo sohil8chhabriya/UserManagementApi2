@@ -12,7 +12,7 @@ from .forms import AppUserCreationForm, AppUserChangeForm
 from .models import AppUser
 
 class AppUserAdmin(UserAdmin):
-    add_form = AppUserChangeForm
+    add_form = AppUserCreationForm
     form = AppUserChangeForm
     model = AppUser
     list_display = ['email', 'first_name', 'last_name']
