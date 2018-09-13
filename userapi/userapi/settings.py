@@ -48,11 +48,29 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'corsheaders',
+
     'userDetails',
     'api',
 ]
 
 AUTH_USER_MODEL = 'userDetails.AppUser'
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USER_EMAIL_FIELD = 'email'
+ACCOUNT_LOGOUT_ON_GET = True
+
+REST_AUTH_SERIALIZERS = {
+    "USER_DETAILS_SERIALIZER": "userDetails.serializers.CustomUserDetailsSerializer",
+}
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    "REGISTER_SERIALIZER": "userDetails.serializers.CustomRegisterSerializer",
+}
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -140,3 +158,50 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        },
+    },
+    'handlers': {
+        'null': {
+            'level':'DEBUG',
+            'class':'logging.NullHandler',
+        },
+        'logfile': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': "./logfile",
+            'maxBytes': 50000,
+            'backupCount': 2,
+            'formatter': 'standard',
+        },
+        'console':{
+            'level':'INFO',
+            'class':'logging.StreamHandler',
+            'formatter': 'standard'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers':['console'],
+            'propagate': True,
+            'level':'WARN',
+        },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'UserManagementApi2/userDetails': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+        },
+    }
+}
